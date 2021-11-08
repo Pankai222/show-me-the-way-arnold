@@ -35,5 +35,56 @@ namespace Arnold_Web_API.Controllers
             
             return Ok(exercises);
         }
+        
+        // GET: api/Exercise/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Exercise>> GetExerciseById(int id)
+        {
+            var exercise = await _context.Exercises.Where(exercise => exercise.Idexercise == id).ToListAsync();
+
+            if (exercise is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(exercise);
+        }
+        
+        // PUT: api/Exercise/id
+        [HttpPut]
+        public ActionResult<Exercise> Put([FromBody] Exercise exercise)
+        {
+            var exerciseToUpdate = _context.Exercises.FirstOrDefault(ex => ex.Idexercise == exercise.Idexercise);
+            if (exerciseToUpdate is null)
+            {
+                return NotFound();
+            }
+
+            exerciseToUpdate.Name = exercise.Name;
+            exerciseToUpdate.Category = exercise.Category;
+            exerciseToUpdate.Compound = exercise.Compound;
+            _context.Exercises.Update(exerciseToUpdate);
+            _context.SaveChangesAsync();
+            return Ok(exerciseToUpdate);
+        }
+        
+        // POST: api/Exercise
+        [HttpPost]
+        public async Task<ActionResult<Exercise>> Post([FromBody] Exercise exercise)
+        {
+            _context.Exercises.Add(exercise);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetExerciseById), new {id = exercise.Idexercise}, exercise);
+        }
+        
+        // DELETE: api/Exercise/id
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            // TODO: check if the thing we are trying to remove actually exists :^)
+            _context.Exercises.Remove(_context.Exercises.Single(exercise => exercise.Idexercise == id));
+            _context.SaveChangesAsync();
+        }
     }
 }
