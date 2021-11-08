@@ -59,7 +59,7 @@ namespace Arnold_Web_API.Controllers
 
         // POST: api/WorkoutRoutine
         [HttpPost]
-        public async Task<ActionResult<WorkoutRoutine>> Post([FromBody]WorkoutRoutine workoutRoutine)
+        public async Task<ActionResult<WorkoutRoutine>> Post([FromBody] WorkoutRoutine workoutRoutine)
         {
             _context.WorkoutRoutines.Add(workoutRoutine);
             await _context.SaveChangesAsync();

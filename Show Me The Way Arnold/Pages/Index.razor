@@ -1,7 +1,46 @@
 ﻿@page "/"
+@using Show_Me_The_Way_Arnold.Models
+@using Show_Me_The_Way_Arnold.Services
 
-<h1>Hello, world!</h1>
+<h1>Welcome to Show Me The Way Arnold!</h1>
+<h2>A place for sharing workout routines</h2>
 
-Welcome to your new app.
+@if (isLoaded)
+{
+    foreach (var routine in _workouts)
+    {
+        <div>
+            <MatCard>
+                <MatCardContent>
+                    <MatHeadline1>@routine.Name</MatHeadline1>
+                    <MatHeadline2>@routine.Duration</MatHeadline2>
+                    <MatHeadline2>@routine.Difficulty</MatHeadline2>
+                </MatCardContent>
+            </MatCard>
+        </div>
+    }
+}
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+
+@code {
+    private List<WorkoutRoutine> _workouts;
+    private bool isLoaded = false;
+
+    [Inject]
+    public WorkoutService WorkoutService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _workouts = await WorkoutService.GetWorkoutRoutines();
+
+
+        if (_workouts is not null)
+        {
+            if (_workouts.Any())
+            {
+                isLoaded = true;
+            }
+        }
+    }
+
+}
