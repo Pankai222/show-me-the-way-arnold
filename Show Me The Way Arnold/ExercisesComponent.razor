@@ -1,0 +1,30 @@
+@using Show_Me_The_Way_Arnold.Models
+
+@if (RoutineModel is not null)
+{
+    <MatButton Outlined="true" style="width: 100%" OnClick="@(() => HideExercises = !HideExercises)">@(HideExercises ? "Show Exercises" : "Hide Exercises")</MatButton>
+    <div hidden="@HideExercises">
+        @foreach (var exercise in RoutineModel.WorkoutRoutineHasExercises)
+        {
+            <MatCard Class="mat-card">
+                <MatCardContent>
+                    <div class="mat-headline">
+                        <strong>@exercise.Exercise.Name</strong>
+                    </div>
+                    <div style="margin: 2px;">Sets: @exercise.Sets</div>
+                    <div style="margin: 2px;">Repetitions per set: @exercise.Repetitions</div>
+                </MatCardContent>
+            </MatCard>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public WorkoutRoutine RoutineModel { get; set; }
+    
+    private bool HideExercises { get; set; } = true;
+}

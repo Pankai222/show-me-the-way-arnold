@@ -19,7 +19,6 @@
     }
     
     .mat-headline {
-        text-align: center;
         margin-top: 4px;
         margin-left: 4px;
     }
@@ -28,7 +27,7 @@
 <h1>Welcome to Show Me The Way Arnold!</h1>
 <h3>A place for sharing workout routines</h3>
 
-@if (isLoaded)
+@if (_isLoaded)
 {
     foreach (var routine in _workouts)
     {
@@ -36,19 +35,15 @@
             <MatCard Class="mat-card">
                 <MatCardContent>
                     <div>
-                        <MatHeadline5 Class="mat-headline">@routine.Name</MatHeadline5>
+                        <MatHeadline5 Style="text-align: center" Class="mat-headline">@routine.Name</MatHeadline5>
                     </div>
                     <div>
                         <MatBody2 Class="mat-card-content mat-card-clean-margin">
                             <div>Duration: @routine.Duration</div>
                             <div>Difficulty: @routine.Difficulty</div>
-                            @if (routine.WorkoutRoutineHasExercises.Any())
-                            {
-                                foreach (var exercise in routine.WorkoutRoutineHasExercises)
-                                {
-                                    <div>@exercise.Name</div>
-                                }
-                            }
+                            <div>
+                                <ExercisesComponent RoutineModel="@routine"></ExercisesComponent>
+                            </div>
                         </MatBody2>
                     </div>
                 </MatCardContent>
@@ -60,7 +55,7 @@
 
 @code {
     private List<WorkoutRoutine> _workouts;
-    private bool isLoaded = false;
+    private bool _isLoaded;
 
     [Inject]
     public WorkoutService WorkoutService { get; set; }
@@ -69,12 +64,11 @@
     {
         _workouts = await WorkoutService.GetWorkoutRoutines();
 
-
         if (_workouts is not null)
         {
             if (_workouts.Any())
             {
-                isLoaded = true;
+                _isLoaded = true;
             }
         }
     }
