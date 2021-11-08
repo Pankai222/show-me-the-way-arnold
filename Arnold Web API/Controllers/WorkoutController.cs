@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Arnold_Web_API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Arnold_Web_API.Controllers
@@ -24,9 +25,12 @@ namespace Arnold_Web_API.Controllers
         
         // GET: api/WorkoutRoutine
         [HttpGet]
-        public ActionResult<WorkoutRoutine> GetWorkouts()
+        public async Task<ActionResult<WorkoutRoutine>> GetWorkouts()
         {
-            var workoutRoutines = _context.WorkoutRoutines.ToList();
+            var workoutRoutines = await _context.WorkoutRoutines
+                 .Include(workout => workout.WorkoutRoutineHasExercises)
+                 .ThenInclude(e => e.Exercise)
+                 .ToListAsync();
 
             if (workoutRoutines.Count == 0)
             {
@@ -38,9 +42,12 @@ namespace Arnold_Web_API.Controllers
 
         // GET: api/WorkoutRoutine/5
         [HttpGet("{id}", Name = "Get")]
-        public ActionResult<WorkoutRoutine> GetWorkoutById(int id)
+        public async Task<ActionResult<WorkoutRoutine>> GetWorkoutById(int id)
         {
-            var workoutRoutine = _context.WorkoutRoutines.Find(id);
+            var workoutRoutine = await _context.WorkoutRoutines.Where(x => x.IdworkoutRoutine == id)
+                .Include(workout => workout.WorkoutRoutineHasExercises)
+                .ThenInclude(e => e.Exercise)
+                .ToListAsync();
 
             if (workoutRoutine is null)
             {
@@ -52,8 +59,12 @@ namespace Arnold_Web_API.Controllers
 
         // POST: api/WorkoutRoutine
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<WorkoutRoutine>> Post([FromBody]WorkoutRoutine workoutRoutine)
         {
+            _context.WorkoutRoutines.Add(workoutRoutine);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetWorkoutById), new {id = workoutRoutine.IdworkoutRoutine}, workoutRoutine);
         }
 
         // PUT: api/WorkoutRoutine/5

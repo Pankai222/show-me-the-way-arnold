@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Arnold_Web_API.Models
 {
     public class WorkoutRoutine
@@ -13,8 +11,7 @@ namespace Arnold_Web_API.Models
         public int? Difficulty { get; set; }
         public int CreatorIdCreator { get; set; }
         public DateTime? CreateDate { get; set; }
-
-        public Creator CreatorIdCreatorNavigation { get; set; }
-        public ICollection<WorkoutRoutineHasExercise> WorkoutRoutineHasExercises { get; set; }
+        
+        public virtual ICollection<WorkoutRoutineHasExercise> WorkoutRoutineHasExercises { get; set; }
     }
 }
