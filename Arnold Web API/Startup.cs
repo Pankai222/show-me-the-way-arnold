@@ -29,7 +29,10 @@ namespace Arnold_Web_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddCors(c =>  
+            { 
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());  
+            }); 
             services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? string.Empty;
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 15));
@@ -51,6 +54,8 @@ namespace Arnold_Web_API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Arnold_Web_API v1"));
             }
 
+            app.UseCors(options => options.AllowAnyOrigin());
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
