@@ -1,7 +1,82 @@
 ﻿@page "/"
+@using Show_Me_The_Way_Arnold.Models
+@using Show_Me_The_Way_Arnold.Services
 
-<h1>Hello, world!</h1>
+<style>
+    .mat-card {
+        width: 400px;
+        max-width: 400px;
+        margin: 10px;
+        float: left;
+    }
 
-Welcome to your new app.
+    .mat-card-content {
+        padding: 1rem;
+    }
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+    .mat-card-clean-margin {
+        margin: 1px;
+    }
+    
+    .mat-headline {
+        text-align: center;
+        margin-top: 4px;
+        margin-left: 4px;
+    }
+</style>
+
+<h1>Welcome to Show Me The Way Arnold!</h1>
+<h3>A place for sharing workout routines</h3>
+
+@if (isLoaded)
+{
+    foreach (var routine in _workouts)
+    {
+        <div>
+            <MatCard Class="mat-card">
+                <MatCardContent>
+                    <div>
+                        <MatHeadline5 Class="mat-headline">@routine.Name</MatHeadline5>
+                    </div>
+                    <div>
+                        <MatBody2 Class="mat-card-content mat-card-clean-margin">
+                            <div>Duration: @routine.Duration</div>
+                            <div>Difficulty: @routine.Difficulty</div>
+                            @if (routine.WorkoutRoutineHasExercises.Any())
+                            {
+                                foreach (var exercise in routine.WorkoutRoutineHasExercises)
+                                {
+                                    <div>@exercise.Name</div>
+                                }
+                            }
+                        </MatBody2>
+                    </div>
+                </MatCardContent>
+            </MatCard>
+        </div>
+    }
+}
+
+
+@code {
+    private List<WorkoutRoutine> _workouts;
+    private bool isLoaded = false;
+
+    [Inject]
+    public WorkoutService WorkoutService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _workouts = await WorkoutService.GetWorkoutRoutines();
+
+
+        if (_workouts is not null)
+        {
+            if (_workouts.Any())
+            {
+                isLoaded = true;
+            }
+        }
+    }
+
+}
