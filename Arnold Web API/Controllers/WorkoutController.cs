@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Arnold_Web_API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -59,12 +57,30 @@ namespace Arnold_Web_API.Controllers
 
         // POST: api/WorkoutRoutine
         [HttpPost]
-        public async Task<ActionResult<WorkoutRoutine>> Post([FromBody] WorkoutRoutine workoutRoutine)
+        public async Task<ActionResult<WorkoutRoutine>> Post(string name, string duration, int difficulty, List<WorkoutRoutineHasExercise> workoutExercises)
         {
-            _context.WorkoutRoutines.Add(workoutRoutine);
+            var workoutRoutineExercises = new List<WorkoutRoutineHasExercise>();
+            
+            workoutRoutineExercises.AddRange(workoutExercises.Select(routineExercise => new WorkoutRoutineHasExercise
+            {
+                Sets = routineExercise.Sets, 
+                Repetitions = routineExercise.Repetitions,
+                Exercise = _context.Exercises.Find(routineExercise.ExerciseIdexercise)
+            }));
+            
+            var workout = new WorkoutRoutine
+            {
+                Name = name,
+                Duration = duration,
+                Difficulty = difficulty,
+                CreatorIdCreator = 1,
+                WorkoutRoutineHasExercises = workoutRoutineExercises
+            };
+            
+            _context.WorkoutRoutines.Add(workout);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetWorkoutById), new {id = workoutRoutine.IdworkoutRoutine}, workoutRoutine);
+            return CreatedAtAction(nameof(GetWorkoutById), new {id = workout.IdworkoutRoutine}, workout);
         }
 
         // PUT: api/WorkoutRoutine/5

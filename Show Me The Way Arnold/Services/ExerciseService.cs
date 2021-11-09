@@ -21,5 +21,11 @@ namespace Show_Me_The_Way_Arnold.Services
 
             return await _httpClient.GetJsonAsync<List<Exercise>>(exerciseCall);
         }
+        
+        public async Task<Exercise> GetExerciseById(int id)
+        {
+            var exerciseCall = $"https://localhost:5001/api/Exercise/{id}";
+            return await _httpClient.GetJsonAsync<Exercise>(exerciseCall);
+        }
     }
 }

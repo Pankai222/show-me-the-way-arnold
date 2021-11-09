@@ -10,6 +10,5 @@ namespace Arnold_Web_API.Models
         public int? Repetitions { get; set; }
         
         public virtual Exercise Exercise { get; set; }
-        public virtual WorkoutRoutine WorkoutRoutine { get; set; }
     }
 }

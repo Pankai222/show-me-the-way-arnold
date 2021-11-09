@@ -41,7 +41,7 @@ namespace Arnold_Web_API.Controllers
         public async Task<ActionResult<Exercise>> GetExerciseById(int id)
         {
             var exercise = await _context.Exercises.Where(exercise => exercise.Idexercise == id).ToListAsync();
-
+            
             if (exercise is null)
             {
                 return NotFound();

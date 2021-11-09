@@ -7,6 +7,8 @@ namespace Show_Me_The_Way_Arnold.Models
         public string Name { get; set; }
         public string Duration { get; set; }
         public int? Difficulty { get; set; }
+
+        public int CreatorId { get; set; }
         public List<WorkoutRoutineHasExercises> WorkoutRoutineHasExercises { get; set; }
     }
 }
