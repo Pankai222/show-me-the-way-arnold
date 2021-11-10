@@ -1,7 +1,6 @@
 @page "/Workout"
 @using Show_Me_The_Way_Arnold.Models
 @using Show_Me_The_Way_Arnold.Services
-@using Show_Me_The_Way_Arnold.Components
 
 <div>
     <h3>Create A Workout Routine</h3>
@@ -10,7 +9,18 @@
         <MatTextField @bind-Value="@_workoutName" Label="Workout name"></MatTextField>
         <MatTextField @bind-Value="@_workoutDuration" Label="Workout Duration"></MatTextField>
         <MatTextField @bind-Value="@_workoutDifficulty" Label="Workout Difficulty"></MatTextField>
-        <AddExerciseComponent Exercises="@_exercises"></AddExerciseComponent>
+        <div>
+            <h5>Add An Exercise</h5>
+            <MatTextField @bind-Value="@_sets" Label="Sets"></MatTextField>
+            <MatTextField @bind-Value="@_reps" Label="Repetitions"></MatTextField>
+            <MatSelect Label="Pick an exercise" @bind-Value="@_exercise">
+                @foreach (var exercise in _exercises)
+                {
+                    <MatOption Value="@exercise.Id.ToString()">@exercise.Name</MatOption>
+                }
+            </MatSelect>
+            <MatButton @onclick="@AddRoutineExerciseToList">Add Exercise To Workout</MatButton>
+        </div>
         <MatButton Type="submit" Raised="true" @onclick="@SubmitWorkout">Create Workout</MatButton>
     }
 </div>
@@ -19,16 +29,30 @@
 @code {
     private bool _isLoaded;
     private List<Exercise> _exercises;
-    private List<WorkoutRoutineHasExercises> _exercisesForRoutine = new();
+    private List<WorkoutRoutineHasExercises> _workoutRoutineHasExercises = new();
+    private string _exercise;
+    private int _sets;
+    private int _reps;
     private string _workoutName;
     private string _workoutDuration;
     private int? _workoutDifficulty;
 
     [Inject]
     public ExerciseService ExerciseService { get; set; }
+
     [Inject]
     public WorkoutService WorkoutService { get; set; }
 
+    private void AddRoutineExerciseToList() 
+    {
+        _workoutRoutineHasExercises.Add(new WorkoutRoutineHasExercises
+        {
+            Sets = _sets,
+            Repetitions = _reps,
+            ExerciseIdExercise = int.Parse(_exercise)
+        });
+    }
+    
     private async void SubmitWorkout()
     {
         var payload = new WorkoutRoutine
@@ -36,7 +60,7 @@
             Name = _workoutName,
             Duration = _workoutDuration,
             Difficulty = _workoutDifficulty,
-            WorkoutRoutineHasExercises = _exercisesForRoutine
+            WorkoutRoutineHasExercises = _workoutRoutineHasExercises
         };
 
         await WorkoutService.AddWorkoutRoutine(payload);
