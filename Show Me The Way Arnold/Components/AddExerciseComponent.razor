@@ -21,6 +21,8 @@
     private string _exercise;
     private WorkoutRoutineHasExercises _workoutRoutineHasExercises;
 
+    [Parameter]
+    public EventCallback<WorkoutRoutineHasExercises> WorkoutRoutineHasExercises { get; set; }
     
     [Inject] 
     public ExerciseService ExerciseService { get; set; }
