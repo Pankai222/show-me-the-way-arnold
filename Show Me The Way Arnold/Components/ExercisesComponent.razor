@@ -1,6 +1,6 @@
 @using Show_Me_The_Way_Arnold.Models
 
-@if (RoutineModel is not null)
+@if (RoutineModel is not null && RoutineModel.WorkoutRoutineHasExercises.Any())
 {
     <MatButton Outlined="true" style="width: 100%" OnClick="@(() => HideExercises = !HideExercises)">@(HideExercises ? "Show Exercises" : "Hide Exercises")</MatButton>
     <div hidden="@HideExercises">

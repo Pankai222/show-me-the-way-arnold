@@ -17,6 +17,8 @@ namespace Arnold_Web_API.Models
         }
         
         
+        public DbSet<Contact> Contact { get; set; }
+        public DbSet<Creator> Creators { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public virtual DbSet<WorkoutRoutine> WorkoutRoutines { get; set; }
         public virtual DbSet<WorkoutRoutineHasExercise> WorkoutRoutineHasExercises { get; set; }
@@ -122,12 +124,62 @@ namespace Arnold_Web_API.Models
                 entity.Property(e => e.Sets)
                     .HasColumnType("int(11)")
                     .HasColumnName("sets");
+            });
+            
+            modelBuilder.Entity<Contact>(entity =>
+            {
+                entity.HasKey(e => new { e.IdContact, e.CreatorIdCreator })
+                    .HasName("PRIMARY")
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-                entity.HasOne(d => d.WorkoutRoutine)
-                    .WithMany(p => p.WorkoutRoutineHasExercises)
-                    .HasForeignKey(d => d.WorkoutRoutineIdworkoutRoutine)
+                entity.ToTable("contact");
+
+                entity.HasCharSet("utf8")
+                    .UseCollation("utf8_general_ci");
+
+                entity.HasIndex(e => e.CreatorIdCreator, "fk_Contact_Creator1_idx");
+
+                entity.Property(e => e.IdContact)
+                    .HasColumnType("int(11)")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("idContact");
+
+                entity.Property(e => e.CreatorIdCreator)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Creator_idCreator");
+
+                entity.Property(e => e.Emailaddress).HasMaxLength(45);
+
+                entity.Property(e => e.Phonenumber).HasMaxLength(45);
+
+                entity.HasOne(d => d.CreatorIdCreatorNavigation)
+                    .WithMany(p => p.Contacts)
+                    .HasForeignKey(d => d.CreatorIdCreator)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_workout_routine_has_exercise_workout_routine1");
+                    .HasConstraintName("fk_Contact_Creator1");
+            });
+
+            modelBuilder.Entity<Creator>(entity =>
+            {
+                entity.HasKey(e => e.IdCreator)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("creator");
+
+                entity.HasCharSet("utf8")
+                    .UseCollation("utf8_general_ci");
+
+                entity.Property(e => e.IdCreator)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("idCreator");
+
+                entity.Property(e => e.Firstname)
+                    .HasMaxLength(45)
+                    .HasColumnName("firstname");
+
+                entity.Property(e => e.Lastname)
+                    .HasMaxLength(45)
+                    .HasColumnName("lastname");
             });
         }
     }

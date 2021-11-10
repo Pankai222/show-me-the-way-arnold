@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Arnold_Web_API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -59,8 +57,24 @@ namespace Arnold_Web_API.Controllers
 
         // POST: api/WorkoutRoutine
         [HttpPost]
-        public async Task<ActionResult<WorkoutRoutine>> Post([FromBody] WorkoutRoutine workoutRoutine)
+        public async Task<ActionResult<WorkoutRoutine>> Post(WorkoutRoutine workoutRoutine)
         {
+            // var workoutRoutineExercises = new List<WorkoutRoutineHasExercise>();
+            // workoutRoutineExercises.AddRange(workoutExercises.Select(routineExercise => new WorkoutRoutineHasExercise
+            // {
+            //     Sets = routineExercise.Sets, 
+            //     Repetitions = routineExercise.Repetitions,
+            //     Exercise = _context.Exercises.Find(routineExercise.ExerciseIdexercise)
+            // }));
+            //
+            // var workout = new WorkoutRoutine
+            // {
+            //     Name = name,
+            //     Duration = duration,
+            //     Difficulty = difficulty,
+            //     WorkoutRoutineHasExercises = workoutRoutineExercises
+            // };
+
             _context.WorkoutRoutines.Add(workoutRoutine);
             await _context.SaveChangesAsync();
 

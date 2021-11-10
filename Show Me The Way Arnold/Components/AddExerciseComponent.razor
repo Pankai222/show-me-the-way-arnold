@@ -1,0 +1,44 @@
+@using Show_Me_The_Way_Arnold.Models
+@using Show_Me_The_Way_Arnold.Services
+
+<div>
+    <h5>Add An Exercise</h5>
+    <MatTextField @bind-Value="@_sets" Label="Sets"></MatTextField>
+    <MatTextField @bind-Value="@_reps" Label="Repetitions"></MatTextField>
+    <MatSelect Label="Pick an exercise" @bind-Value="@_exercise">
+        @foreach (var exercise in Exercises)
+        {
+            <MatOption Value="@exercise.Id.ToString()">@exercise.Name</MatOption>
+        }
+    </MatSelect>
+    <MatButton @onclick="@CreateWorkoutRoutine">Add Exercise</MatButton>
+</div>
+
+
+@code {
+    private int _sets;
+    private int _reps;
+    private string _exercise;
+    private WorkoutRoutineHasExercises _workoutRoutineHasExercises;
+
+    
+    [Inject] 
+    public ExerciseService ExerciseService { get; set; }
+
+    private async void CreateWorkoutRoutine()
+    {
+        _workoutRoutineHasExercises = new WorkoutRoutineHasExercises
+        {
+            Sets = _sets,
+            Repetitions = _reps,
+            Exercise = await ExerciseService.GetExerciseById(int.Parse(_exercise))
+        };
+    }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public List<Exercise> Exercises { get; set; }
+
+}

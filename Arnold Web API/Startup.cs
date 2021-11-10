@@ -31,7 +31,12 @@ namespace Arnold_Web_API
         {
             services.AddCors(c =>  
             { 
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());  
+                c.AddPolicy("CORS_Policy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
             }); 
             services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? string.Empty;
@@ -54,8 +59,8 @@ namespace Arnold_Web_API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Arnold_Web_API v1"));
             }
 
-            app.UseCors(options => options.AllowAnyOrigin());
-            
+            app.UseCors("CORS_Policy");
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

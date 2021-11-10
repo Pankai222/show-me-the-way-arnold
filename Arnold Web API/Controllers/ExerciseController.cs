@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Arnold_Web_API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -41,7 +38,7 @@ namespace Arnold_Web_API.Controllers
         public async Task<ActionResult<Exercise>> GetExerciseById(int id)
         {
             var exercise = await _context.Exercises.Where(exercise => exercise.Idexercise == id).ToListAsync();
-
+            
             if (exercise is null)
             {
                 return NotFound();
