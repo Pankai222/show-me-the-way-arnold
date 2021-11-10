@@ -57,30 +57,28 @@ namespace Arnold_Web_API.Controllers
 
         // POST: api/WorkoutRoutine
         [HttpPost]
-        public async Task<ActionResult<WorkoutRoutine>> Post(string name, string duration, int difficulty, List<WorkoutRoutineHasExercise> workoutExercises)
+        public async Task<ActionResult<WorkoutRoutine>> Post(WorkoutRoutine workoutRoutine)
         {
-            var workoutRoutineExercises = new List<WorkoutRoutineHasExercise>();
-            
-            workoutRoutineExercises.AddRange(workoutExercises.Select(routineExercise => new WorkoutRoutineHasExercise
-            {
-                Sets = routineExercise.Sets, 
-                Repetitions = routineExercise.Repetitions,
-                Exercise = _context.Exercises.Find(routineExercise.ExerciseIdexercise)
-            }));
-            
-            var workout = new WorkoutRoutine
-            {
-                Name = name,
-                Duration = duration,
-                Difficulty = difficulty,
-                CreatorIdCreator = 1,
-                WorkoutRoutineHasExercises = workoutRoutineExercises
-            };
-            
-            _context.WorkoutRoutines.Add(workout);
+            // var workoutRoutineExercises = new List<WorkoutRoutineHasExercise>();
+            // workoutRoutineExercises.AddRange(workoutExercises.Select(routineExercise => new WorkoutRoutineHasExercise
+            // {
+            //     Sets = routineExercise.Sets, 
+            //     Repetitions = routineExercise.Repetitions,
+            //     Exercise = _context.Exercises.Find(routineExercise.ExerciseIdexercise)
+            // }));
+            //
+            // var workout = new WorkoutRoutine
+            // {
+            //     Name = name,
+            //     Duration = duration,
+            //     Difficulty = difficulty,
+            //     WorkoutRoutineHasExercises = workoutRoutineExercises
+            // };
+
+            _context.WorkoutRoutines.Add(workoutRoutine);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetWorkoutById), new {id = workout.IdworkoutRoutine}, workout);
+            return CreatedAtAction(nameof(GetWorkoutById), new {id = workoutRoutine.IdworkoutRoutine}, workoutRoutine);
         }
 
         // PUT: api/WorkoutRoutine/5
