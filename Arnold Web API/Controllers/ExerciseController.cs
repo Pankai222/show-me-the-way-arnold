@@ -22,7 +22,7 @@ namespace Arnold_Web_API.Controllers
             _logger = logger;
             _context = workoutdbContext;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<Exercise>> GetExercises()
         {
@@ -32,12 +32,12 @@ namespace Arnold_Web_API.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(exercises);
         }
-        
+
         // GET: api/Exercise/id
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Exercise>> GetExerciseById(int id)
         {
             var exercise = await _context.Exercises.Where(exercise => exercise.Idexercise == id).ToListAsync();
@@ -49,35 +49,39 @@ namespace Arnold_Web_API.Controllers
 
             return Ok(exercise);
         }
-        
-        // PUT: api/Exercise/id
-        [HttpPut]
-        public ActionResult<Exercise> Put([FromBody] Exercise exercise)
-        {
-            var exerciseToUpdate = _context.Exercises.FirstOrDefault(ex => ex.Idexercise == exercise.Idexercise);
-            if (exerciseToUpdate is null)
-            {
-                return NotFound();
-            }
 
-            exerciseToUpdate.Name = exercise.Name;
-            exerciseToUpdate.Category = exercise.Category;
-            exerciseToUpdate.Compound = exercise.Compound;
-            _context.Exercises.Update(exerciseToUpdate);
-            _context.SaveChangesAsync();
+        // PUT: api/Exercise/id
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<Exercise>> UpdateExercise(int id, Exercise exercise)
+        {
+            if (id != exercise.Idexercise) { return BadRequest("Exercise ID mismatch"); }
+
+            var exerciseToUpdate = await GetExerciseById(id);
+            if (exerciseToUpdate is null) { return NotFound("Exercise not found"); }
+
+            var result = await _context.Exercises.FirstOrDefaultAsync(e => e.Idexercise == exercise.Idexercise);
+            if (result == null) return BadRequest("Failed to update exercise");
+            
+            result.Name = exercise.Name;
+            result.Category = exercise.Category;
+            result.Compound = exercise.Compound;
+
+            await _context.SaveChangesAsync();
+
             return Ok(exerciseToUpdate);
+
         }
-        
+
         // POST: api/Exercise
         [HttpPost]
-        public async Task<ActionResult<Exercise>> Post([FromBody] Exercise exercise)
+        public async Task<ActionResult<Exercise>> CreateExercise([FromBody] Exercise exercise)
         {
             _context.Exercises.Add(exercise);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetExerciseById), new {id = exercise.Idexercise}, exercise);
         }
-        
+
         // DELETE: api/Exercise/id
         [HttpDelete("{id}")]
         public void Delete(int id)
