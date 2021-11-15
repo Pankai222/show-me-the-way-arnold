@@ -27,7 +27,7 @@ namespace Arnold_Web_API.Controllers
         {
             var workoutRoutines = await _context.WorkoutRoutines
                  .Include(workout => workout.WorkoutRoutineHasExercises)
-                 .ThenInclude(e => e.Exercise)
+                    .ThenInclude(e => e.Exercise)
                  .ToListAsync();
 
             if (workoutRoutines.Count == 0)
@@ -44,7 +44,7 @@ namespace Arnold_Web_API.Controllers
         {
             var workoutRoutine = await _context.WorkoutRoutines.Where(x => x.IdworkoutRoutine == id)
                 .Include(workout => workout.WorkoutRoutineHasExercises)
-                .ThenInclude(e => e.Exercise)
+                    .ThenInclude(e => e.Exercise)
                 .ToListAsync();
 
             if (workoutRoutine is null)
