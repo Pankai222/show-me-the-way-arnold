@@ -30,7 +30,9 @@
 
 @if (_isLoaded)
 {
-    foreach (var routine in _workouts)
+    var sortedWorkouts = _workouts
+        .OrderByDescending(x => x.WorkoutRoutineHasExercises?.Count);
+    foreach (var routine in sortedWorkouts)
     {
         <div>
             <MatCard Class="mat-card">
