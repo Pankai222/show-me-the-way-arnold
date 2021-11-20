@@ -23,7 +23,14 @@ namespace Arnold_Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<Exercise>> GetExercises()
         {
-            var exercises = await _context.Exercises.ToListAsync();
+            var exercises = await _context.Exercises
+                .Include(eq => eq.ExerciseHasWorkoutEquipment)
+                    .ThenInclude(we => we.WorkoutEquipment)
+                .Include(m => m.ExerciseHasMuscles)
+                    .ThenInclude(mu => mu.Muscle)
+                .Include(ev => ev.ExerciseVideos)
+                .AsNoTracking()
+                .ToListAsync();
 
             if (exercises.Count == 0)
             {
@@ -37,7 +44,15 @@ namespace Arnold_Web_API.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Exercise>> GetExerciseById(int id)
         {
-            var exercise = await _context.Exercises.Where(exercise => exercise.Idexercise == id).ToListAsync();
+            var exercise = await _context.Exercises
+                .Where(exercise => exercise.Id == id)
+                .Include(eq => eq.ExerciseHasWorkoutEquipment)
+                    .ThenInclude(we => we.WorkoutEquipment)
+                .Include(m => m.ExerciseHasMuscles)
+                    .ThenInclude(mu => mu.Muscle)
+                .Include(ev => ev.ExerciseVideos)
+                .AsNoTracking()
+                .ToListAsync();
             
             if (exercise is null)
             {
@@ -51,12 +66,12 @@ namespace Arnold_Web_API.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Exercise>> UpdateExercise(int id, Exercise exercise)
         {
-            if (id != exercise.Idexercise) { return BadRequest("Exercise ID mismatch"); }
+            if (id != exercise.Id) { return BadRequest("Exercise ID mismatch"); }
 
             var exerciseToUpdate = await GetExerciseById(id);
             if (exerciseToUpdate is null) { return NotFound("Exercise not found"); }
 
-            var result = await _context.Exercises.FirstOrDefaultAsync(e => e.Idexercise == exercise.Idexercise);
+            var result = await _context.Exercises.FirstOrDefaultAsync(e => e.Id == exercise.Id);
             if (result == null) return BadRequest("Failed to update exercise");
             
             result.Name = exercise.Name;
@@ -76,7 +91,7 @@ namespace Arnold_Web_API.Controllers
             _context.Exercises.Add(exercise);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetExerciseById), new {id = exercise.Idexercise}, exercise);
+            return CreatedAtAction(nameof(GetExerciseById), new {id = exercise.Id}, exercise);
         }
 
         // DELETE: api/Exercise/id
@@ -84,7 +99,7 @@ namespace Arnold_Web_API.Controllers
         public void Delete(int id)
         {
             // TODO: check if the thing we are trying to remove actually exists :^)
-            _context.Exercises.Remove(_context.Exercises.Single(exercise => exercise.Idexercise == id));
+            _context.Exercises.Remove(_context.Exercises.Single(exercise => exercise.Id == id));
             _context.SaveChangesAsync();
         }
     }
