@@ -11,14 +11,14 @@
         <MatTextField @bind-Value="@_workoutRoutine.Difficulty" Label="Workout Difficulty"></MatTextField>
         <div>
             <h5>Add An Exercise</h5>
-            <MatTextField @bind-Value="@_workoutRoutineHasExercise.Sets" Label="Sets"></MatTextField>
-            <MatTextField @bind-Value="@_workoutRoutineHasExercise.Repetitions" Label="Repetitions"></MatTextField>
             <MatSelect Label="Pick an exercise" @bind-Value="@_workoutRoutineHasExercise.ExerciseId">
                 @foreach (var exercise in _exercises)
                 {
                     <MatOption Value="@exercise.Id">@exercise.Name</MatOption>
                 }
             </MatSelect>
+            <MatTextField @bind-Value="@_workoutRoutineHasExercise.Sets" Label="Sets"></MatTextField>
+            <MatTextField @bind-Value="@_workoutRoutineHasExercise.Repetitions" Label="Repetitions"></MatTextField>
             <MatButton @onclick="@AddRoutineExerciseToList">Add Exercise To Workout</MatButton>
         </div>
         <MatButton Type="submit" Raised="true" @onclick="@SubmitWorkout">Create Workout</MatButton>
