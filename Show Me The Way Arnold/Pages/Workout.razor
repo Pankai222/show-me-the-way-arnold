@@ -49,7 +49,13 @@
 
     private void AddRoutineExerciseToList()
     {
-        _workoutRoutineHasExercises.Add(_workoutRoutineHasExercise);
+        var exercise = new WorkoutRoutineHasExercises
+        {
+            ExerciseId = _workoutRoutineHasExercise.ExerciseId,
+            Sets = _workoutRoutineHasExercise.Sets,
+            Repetitions = _workoutRoutineHasExercise.Repetitions
+        };
+        _workoutRoutineHasExercises.Add(exercise);
         _activateSnackbar = true;
     }
 

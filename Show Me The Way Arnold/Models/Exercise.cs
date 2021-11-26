@@ -10,8 +10,8 @@ namespace Show_Me_The_Way_Arnold.Models
         public string Category { get; set; }
         public bool Compound { get; set; }
 
-        public List<ExerciseHasMuscles> Muscles { get; set; }
-        public List<ExerciseHasWorkoutEquipment> Equipment { get; set; }
+        public List<ExerciseHasMuscles>? Muscles { get; set; }
+        public List<ExerciseHasWorkoutEquipment>? Equipment { get; set; }
     }
 
     public class ExerciseHasMuscles
