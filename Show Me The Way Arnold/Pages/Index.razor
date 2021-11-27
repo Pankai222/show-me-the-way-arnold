@@ -30,7 +30,9 @@
 
 @if (_isLoaded)
 {
-    foreach (var routine in _workouts)
+    var sortedWorkouts = _workouts
+        .OrderByDescending(x => x.WorkoutRoutineHasExercises?.Count);
+    foreach (var routine in sortedWorkouts)
     {
         <div>
             <MatCard Class="mat-card">
@@ -43,7 +45,7 @@
                             <div>Duration: @routine.Duration</div>
                             <div>Difficulty: @routine.Difficulty</div>
                             <div>
-                                <ExercisesComponent RoutineModel="@routine"></ExercisesComponent>
+                                <ExercisesComponent WorkoutRoutineExercisesModel="@routine"></ExercisesComponent>
                             </div>
                         </MatBody2>
                     </div>
@@ -65,12 +67,9 @@
     {
         _workouts = await WorkoutService.GetWorkoutRoutines();
 
-        if (_workouts is not null)
+        if (_workouts.Any())
         {
-            if (_workouts.Any())
-            {
-                _isLoaded = true;
-            }
+            _isLoaded = true;
         }
     }
 
