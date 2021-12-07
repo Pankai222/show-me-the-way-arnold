@@ -36,7 +36,7 @@
 @code {
     private bool _isLoaded;
     private List<Exercise> _exercises;
-    private List<WorkoutRoutineHasExercises> _workoutRoutineHasExercises = new();
+    private readonly List<WorkoutRoutineHasExercises> _workoutRoutineHasExercises = new();
     private string _exercise;
     private int? _sets;
     private int? _reps;
