@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Arnold_Web_DocumentAPI.Models;
+using Arnold_Web_DocumentAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Arnold_Web_DocumentAPI.Controllers
@@ -7,33 +9,39 @@ namespace Arnold_Web_DocumentAPI.Controllers
     [ApiController]
     public class WorkoutController : ControllerBase
     {
-        // GET: api/Workout
+        private readonly WorkoutService _workoutService;  
+  
+        public WorkoutController(WorkoutService workoutService)  
+        {  
+            _workoutService = workoutService;  
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        public ActionResult<List<WorkoutRoutine>> Get() => _workoutService.Get();
 
-        // GET: api/Workout/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public ActionResult<WorkoutRoutine> Get(string id)
         {
-            return "value";
-        }
+            var workout = _workoutService.Get(id);
 
-        // POST: api/Workout
+            if (workout is null)
+            {
+                return NotFound();
+            }
+
+            return workout;
+        }
+        
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
-
-        // PUT: api/Workout/5
+        
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
-
-        // DELETE: api/Workout/5
+        
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

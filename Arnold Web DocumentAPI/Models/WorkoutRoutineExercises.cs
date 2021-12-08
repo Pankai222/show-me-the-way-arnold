@@ -1,4 +1,4 @@
-namespace WebApplication.Models
+namespace Arnold_Web_DocumentAPI.Models
 {
     public class WorkoutRoutineExercises
     {
