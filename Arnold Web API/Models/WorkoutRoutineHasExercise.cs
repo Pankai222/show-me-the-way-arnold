@@ -9,6 +9,6 @@ namespace Arnold_Web_API.Models
         public int? Sets { get; set; }
         public int? Repetitions { get; set; }
         
-        public virtual Exercise Exercise { get; set; }
+        public virtual Exercise? Exercise { get; set; }
     }
 }

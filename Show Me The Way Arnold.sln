@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arnold Web API", "Arnold We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arnold Web DocumentAPI", "Arnold Web DocumentAPI\Arnold Web DocumentAPI.csproj", "{8AFF833C-FA5F-48D0-8406-E46E7CF6B575}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arnold Web GraphAPI", "Arnold Web GraphAPI\Arnold Web GraphAPI.csproj", "{9FF534A4-2980-4ED2-9809-202334D9A951}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{8AFF833C-FA5F-48D0-8406-E46E7CF6B575}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AFF833C-FA5F-48D0-8406-E46E7CF6B575}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AFF833C-FA5F-48D0-8406-E46E7CF6B575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FF534A4-2980-4ED2-9809-202334D9A951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FF534A4-2980-4ED2-9809-202334D9A951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FF534A4-2980-4ED2-9809-202334D9A951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FF534A4-2980-4ED2-9809-202334D9A951}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

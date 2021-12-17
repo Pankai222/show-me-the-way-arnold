@@ -59,22 +59,6 @@ namespace Arnold_Web_API.Controllers
         [HttpPost]
         public async Task<ActionResult<WorkoutRoutine>> Post(WorkoutRoutine workoutRoutine)
         {
-            // var workoutRoutineExercises = new List<WorkoutRoutineHasExercise>();
-            // workoutRoutineExercises.AddRange(workoutExercises.Select(routineExercise => new WorkoutRoutineHasExercise
-            // {
-            //     Sets = routineExercise.Sets, 
-            //     Repetitions = routineExercise.Repetitions,
-            //     Exercise = _context.Exercises.Find(routineExercise.ExerciseIdexercise)
-            // }));
-            //
-            // var workout = new WorkoutRoutine
-            // {
-            //     Name = name,
-            //     Duration = duration,
-            //     Difficulty = difficulty,
-            //     WorkoutRoutineHasExercises = workoutRoutineExercises
-            // };
-
             _context.WorkoutRoutines.Add(workoutRoutine);
             await _context.SaveChangesAsync();
 
