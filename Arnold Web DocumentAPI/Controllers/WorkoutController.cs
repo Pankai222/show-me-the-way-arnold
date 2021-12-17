@@ -13,7 +13,7 @@ namespace Arnold_Web_DocumentAPI.Controllers
   
         public WorkoutController(WorkoutService workoutService)  
         {  
-            _workoutService = workoutService;  
+            _workoutService = workoutService;
         }
 
         [HttpGet]
