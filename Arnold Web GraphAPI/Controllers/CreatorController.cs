@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Arnold_Web_GraphAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -25,20 +23,18 @@ namespace Arnold_Web_GraphAPI.Controllers
             await using var session = _driver.AsyncSession();
             var creators = await session.ReadTransactionAsync(async tx =>
             {
-                var result = await tx.RunAsync(@"MATCH (creator:Creator) 
-                                                    RETURN creator.firstname as firstname, 
-                                                           creator.lastname as lastname,
+                var result = await tx.RunAsync(@"MATCH (c:Creator)-[:CREATED]->(w: Workout)
+                                                    RETURN c.firstname as firstname, 
+                                                           c.lastname as lastname,
                                                            COLLECT({
-                                                               name: workout.name,
-                                                               duration: workout.duration,
-                                                               difficulty: workout.difficulty,
-                                                               createdate: workout.createdate,
-                                                               exercises: workout.exercises 
-                                                           }) as workouts ");
+                                                               name: w.name,
+                                                               duration: w.duration,
+                                                               difficulty: w.difficulty
+                                                           }) as workouts");
                 return await result.ToListAsync(entry => new Creator(
-                    entry["firstname"].As<string>(), 
+                    entry["firstname"].As<string>(),
                     entry["lastname"].As<string>(),
-                    entry["workouts"].As<List<Workout>>()));
+                    entry["workouts"].As<List<IDictionary<string, object>>>()));
             });
 
             if (creators is null)
@@ -55,20 +51,19 @@ namespace Arnold_Web_GraphAPI.Controllers
             await using var session = _driver.AsyncSession();
             var creator = await session.ReadTransactionAsync(async tx =>
             {
-                var result = await tx.RunAsync(@"MATCH (creator:Creator)
+                var result = await tx.RunAsync(@"MATCH (creator:Creator)-[:CREATED]->(w:Workout)
                                                         WHERE TOLOWER(creator.firstname) = TOLOWER($firstname)
                                                         RETURN creator.firstname as firstname,
                                                                creator.lastname as lastname,
                                                                COLLECT({
-                                                                   name: workout.name,
-                                                                   duration: workout.duration,
-                                                                   difficulty: workout.difficulty,
-                                                                   createdate: workout.createdate
+                                                                   name: w.name,
+                                                                   duration: w.duration,
+                                                                   difficulty: w.difficulty
                                                                }) as workouts", new {firstname});
                 return await result.SingleAsync(entry => new Creator(
                     entry["firstname"].As<string>(),
                     entry["lastname"].As<string>(),
-                    entry["workouts"].As<List<Workout>>()));
+                    entry["workouts"].As<List<IDictionary<string, object>>>()));
             });
 
             if (creator is null)
