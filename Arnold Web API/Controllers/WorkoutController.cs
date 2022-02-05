@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Arnold_Web_API.Models;
@@ -42,6 +41,11 @@ namespace Arnold_Web_API.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<ActionResult<WorkoutRoutine>> GetWorkoutById(int id)
         {
+            if (id < 1)
+            {
+                return BadRequest();
+            }
+            
             var workoutRoutine = await _context.WorkoutRoutines.Where(x => x.IdworkoutRoutine == id)
                 .Include(workout => workout.WorkoutRoutineHasExercises)
                     .ThenInclude(e => e.Exercise)
